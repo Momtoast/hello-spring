@@ -1,10 +1,12 @@
 package org.launchcode.hellospring.controllers;
 
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
+
 @Controller
-@ResponseBody
 @RequestMapping("hello")
 public class HelloController {
 
@@ -15,38 +17,29 @@ public class HelloController {
     //}
 
     @GetMapping("goodbye")
+    @ResponseBody
     public String goodbye() {
         return "Goodbye, Spring!";
     }
 
     @RequestMapping(method={RequestMethod.GET, RequestMethod.POST})
-    public String helloQueryParam(@RequestParam String name) {
-        return "Hello, " + name +"!";
+    @ResponseBody
+    public String helloQueryParam(@RequestParam String name, Model model) {
+        String greeting = "Hello, " + name + "!";
+        model.addAttribute("greeting", greeting);
+        return "hello";
     }
 
     @GetMapping("{name}")
-    public String helloPathParam(@PathVariable String name) {
-        return "Hello, " + name +"!";
+    public String helloPathParam(@PathVariable String name, Model model) {
+        String greeting = "Hello, " + name + "!";
+        model.addAttribute("greeting", greeting);
+        return "hello";
     }
 
     @GetMapping("form")
     public String helloForm() {
-        return "<html>" +
-                "<body>" +
-                "<form action='hello' method='post'>" +
-                "<input type='text' name='name'>"+
-                "<select name='language'" +
-                "<option value=''>Please choose a language</option>" +
-                "<option value='English'>English</option>" +
-                "<option value='French'>French</option>" +
-                "<option value='Spanish'>Spanish</option>" +
-                "<option value='German'>German</option>" +
-                "<option value='Italian'>Italian</option>" +
-                "</select>" +
-                "<input type='submit' value='Greet Me'>" +
-                "</form>" +
-                "</body>" +
-                "</html>";
+        return "form";
     }
 
     @RequestMapping(value="hello", method = RequestMethod.POST)
@@ -82,5 +75,16 @@ public class HelloController {
         }
 
         return greeting + " " + n;
+    }
+
+    @GetMapping("hello-names")
+    public String helloNames(Model model) {
+        ArrayList<String> names = new ArrayList<String>();
+        names.add("LaunchCode");
+        names.add("Java");
+        names.add("JavaScript");
+        names.add("Python");
+        model.addAttribute("names", names);
+        return "hello-list";
     }
 }
